@@ -2,8 +2,8 @@
  * Create a list that holds all of your cards
  */
 //Build card array holding the names of 16 cards.
-var cardArray = ['anchor', 'bolt', 'cube', 'diamond', 'paper-plane-o', 
-	'leaf', 'bicycle', 'bomb', 'diamond', 'paper-plane-o', 'anchor', 
+const cardArray = ['anchor', 'bolt', 'cube', 'diamond', 'paper-plane-o',
+	'leaf', 'bicycle', 'bomb', 'diamond', 'paper-plane-o', 'anchor',
 	'bolt', 'bomb', 'cube', 'bicycle', 'leaf'];
 
 /*
@@ -15,7 +15,7 @@ var cardArray = ['anchor', 'bolt', 'cube', 'diamond', 'paper-plane-o',
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
+    const currentIndex = array.length, temporaryValue, randomIndex;
 
     while (currentIndex !== 0) {
         randomIndex = Math.floor(Math.random() * currentIndex);
@@ -30,19 +30,19 @@ function shuffle(array) {
 function loadBoard(cardArray) {
 	//Set board up for the start of a new game.
 	//Change all classes back to .card
-	//cleanup next 4 lines
+	//TODO: cleanup next 5 lines
 	var deckClass = $('.deck');
 	var listTag1 = $('li');
 	//var listTag = $(this).find('li');
 	var iTag = $('i');
 	var classMatch = $('.card.match');
-	var classCard = $('.card');
+	const classCard = $('.card');
 
 	//Empty removes any previous card symbols
 	$(".card").empty();
 	$('li').removeClass('card match').addClass('card');
 	$('li').removeClass('card open show').addClass('card');
-	
+
 	//For each card class add a child class using the shuffled card array
 	classCard.each(function(index) {
 		$( this ).addClass('fa fa-' + cardArray[index]);
@@ -51,7 +51,7 @@ function loadBoard(cardArray) {
 	})
 }
 
-	
+
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
@@ -63,10 +63,10 @@ function loadBoard(cardArray) {
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
- //class open card needs defined, in the following:
+ //TODO: class open card needs defined, in the following:
 function showCard() {
 	$('.card').click(function() {
-		var flipIt = $( this ).addClass('open show');
+		const flipIt = $( this ).addClass('open show');
 		openCards.push(flipIt.children().attr('class'));
 		//console.log(openCards);
 		//this function still needs defined
@@ -74,20 +74,20 @@ function showCard() {
 	});
 }
 
- 
+
 function startGame(){
 	console.log("Let's flip some cards.");
 	shuffle(cardArray);
 	loadBoard(cardArray);
 	console.log("Shuffled items: " + cardArray);
 	showCard();
-};	
+};
 
 //Wait for html page to load before starting the game.
 window.onload = function() {
 	startGame();
 };
- 
+
 
 
 
