@@ -1,10 +1,12 @@
 /*
  * Create a list that holds all of your cards
+ * Build card array holding the names of 16 cards.
  */
-//Build card array holding the names of 16 cards.
-const cardArray = ['anchor', 'bolt', 'cube', 'diamond', 'paper-plane-o',
-	'leaf', 'bicycle', 'bomb', 'diamond', 'paper-plane-o', 'anchor',
-	'bolt', 'bomb', 'cube', 'bicycle', 'leaf'];
+const cardArray = [
+	'anchor', 'bolt', 'cube', 'diamond', 'paper-plane-o',
+	'leaf', 'bicycle', 'bomb', 'diamond', 'paper-plane-o',
+	'anchor', 'bolt', 'bomb', 'cube', 'bicycle', 'leaf'
+];
 
 /*
  * Display the cards on the page
@@ -15,7 +17,7 @@ const cardArray = ['anchor', 'bolt', 'cube', 'diamond', 'paper-plane-o',
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
-    const currentIndex = array.length, temporaryValue, randomIndex;
+    var currentIndex = array.length, temporaryValue, randomIndex;
 
     while (currentIndex !== 0) {
         randomIndex = Math.floor(Math.random() * currentIndex);
@@ -47,7 +49,7 @@ function loadBoard(cardArray) {
 	classCard.each(function(index) {
 		$( this ).addClass('fa fa-' + cardArray[index]);
 		index++;
-	console.log("The board is set");
+	//console.log("The board is set");
 	})
 }
 
@@ -63,16 +65,47 @@ function loadBoard(cardArray) {
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
- //TODO: class open card needs defined, in the following:
 function showCard() {
+	const openCards = [];
+	let flipIt = 'test';
+	let cardMatch = false;
+
 	$('.card').click(function() {
-		const flipIt = $( this ).addClass('open show');
-		openCards.push(flipIt.children().attr('class'));
-		//console.log(openCards);
-		//this function still needs defined
-		//compareCards(flipped, openCards);
-	});
+		$( this ).toggleClass('open show');
+		flipIt = $( this ).attr('class');
+		openCards.push(flipIt);
+		console.log(flipIt);
+		//TODO: remove FOR loop after testing
+		openCards.forEach(function(word, num, all) {
+			console.log("Show each " + openCards);
+		});
+		if (openCards.length === 2) {
+			console.log(openCards[0]);
+			cardMatch = compareCards(flipIt, openCards, cardMatch);
+			//Empty the array for player to try again.
+			openCards.splice(0, 2);
+			console.log('2.To match or not ' + cardMatch);
+			if (cardMatch == true) {
+				console.log("TRUE");
+			}	else {
+				console.log("FALSE");
+			};
+		};
+		
+  });	
 }
+
+function compareCards(flipIt, openCards, cardMatch) {
+	if (openCards[0] === openCards[1]) {
+		console.log('Got a match');
+		cardMatch = true;
+	} else {
+		console.log('No match');
+		cardMatch = false;
+		};
+console.log('1.To match or not ' + cardMatch);
+return cardMatch;	
+};
 
 
 function startGame(){
@@ -87,8 +120,4 @@ function startGame(){
 window.onload = function() {
 	startGame();
 };
-
-
-
-
 //alert("Hello - see me");
