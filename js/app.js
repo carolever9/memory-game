@@ -7,6 +7,7 @@ const cardArray = [
 	'leaf', 'bicycle', 'bomb', 'diamond', 'paper-plane-o',
 	'anchor', 'bolt', 'bomb', 'cube', 'bicycle', 'leaf'
 ];
+const deckClass = $('.deck');
 
 /*
  * Display the cards on the page
@@ -33,7 +34,7 @@ function loadBoard(cardArray) {
 	//Set board up for the start of a new game.
 	//Change all classes back to .card
 	//TODO: cleanup next 5 lines
-	var deckClass = $('.deck');
+	//var deckClass = $('.deck');
 	var listTag1 = $('li');
 	//var listTag = $(this).find('li');
 	var iTag = $('i');
@@ -69,10 +70,18 @@ function showCard() {
 	const openCards = [];
 	let flipIt = 'test';
 	let cardMatch = false;
+	let matchedCards = [];
 
 	$('.card').click(function() {
-		$( this ).toggleClass('open show');
+		$( this ).toggleClass('open show');	
 		flipIt = $( this ).attr('class');
+		//$( this ).toggleClass('open show').delay(5000);  //not working
+		function flip2Back() {
+			console.log("now in flip2Back");
+			flipIt = $( this ).removeClass('.card').addClass('match');
+			console.log($( flipIt ).attr('class'));
+		};
+		setTimeout(flip2Back, 2000);  //still does not show 2nd card during this delay
 		openCards.push(flipIt);
 		console.log(flipIt);
 		//TODO: remove FOR loop after testing
@@ -82,25 +91,52 @@ function showCard() {
 		if (openCards.length === 2) {
 			console.log(openCards[0]);
 			cardMatch = compareCards(flipIt, openCards, cardMatch);
-			//Empty the array for player to try again.
-			openCards.splice(0, 2);
 			console.log('2.To match or not ' + cardMatch);
 			if (cardMatch == true) {
 				console.log("TRUE");
+				//$(flipIt).removeClass('open show').addClass('match');
+				openCards.forEach(function(word) {
+					matchedCards.push(word);
+					console.log("Show matches " + matchedCards);
+					if (matchedCards.length === 16) {
+						alert("Good game! You're a winner!");
+					}	
+				});
 			}	else {
 				console.log("FALSE");
+				alert("Not a match.");
+				//alert("Not a match.").delay(5000); //gets property 'delay' undefined
+				//deckClass.find().removeClass('open show');
+				//$('li').removeClass('card open show').addClass('card');
 			};
+				//Empty the array for player to try again.
+				openCards.splice(0, 2);
 		};
-		
   });	
 }
 
-function compareCards(flipIt, openCards, cardMatch) {
+function compareCards(flipIt, openCards, cardMatch, matchedCards) {
+	//delay( 800 ); //did not work
+	flipBack = $('.deck').children('class');
+	//matchedCards = [];
 	if (openCards[0] === openCards[1]) {
+		$('.deck').find().removeClass('open show')
+		$('.deck').find().addClass('match');
+		//$(openCards[1]).removeClass('open.show').addClass('.match');
 		console.log('Got a match');
 		cardMatch = true;
 	} else {
-		console.log('No match');
+		console.log('No match' + flipBack);
+		if (flipBack === 'card open show') {
+			$( this ).removeClass('card open show').addClass('card');
+		};
+		deckClass.children().toggleClass('card'); //not working
+		//deckClass.find().removeClass('open show');
+		//$(openCards[0]).removeClass('open show');
+		//$(openCards[1]).removeClass('open show');
+		
+		//$('li').removeClass('card open show').addClass('card');
+		//$('li').removeClass('card.open.show').addClass('card');
 		cardMatch = false;
 		};
 console.log('1.To match or not ' + cardMatch);
