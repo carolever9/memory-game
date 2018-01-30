@@ -54,6 +54,22 @@ function loadBoard(cardArray) {
 	})
 }
 
+//Add a timer function
+/*
+const input = {hours: 0, minutes: 0, seconds: 0};
+let timestamp = new Date(input.hours, input.minutes, input.seconds);
+var interval = 1;
+
+setInterval(function () {
+    timestamp = new Date(timestamp.getTime() + interval * 1000);     
+    $('.countdown2').text(timestamp.getHours()+'h:'+
+       timestamp.getMinutes()+'m:'+timestamp.getSeconds()+'s');
+}, Math.abs(interval) * 1000);
+*/
+	//console.log("Time is: " + timestamp + timestamp.input.seconds);
+
+//Add 2nd timer
+let startTime = new Date();
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -65,37 +81,58 @@ function loadBoard(cardArray) {
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
-
+function scoreDisplay(counter) {
+	console.log("In function counter: " + counter);
+	$('.moves').replaceWith('<span class="moves">' + counter + '</span>');
+	if (counter == 7) {
+		$('.stars').remove();
+	}	
+};		 
+ 
 function showCard() {
 	const openCards = [];
 	let flipIt = 'test';
 	let cardMatch = false;
 	let matchedCards = [];
-
+	let cardCounter = 0
+	//timestamp = new Date(timestamp.getTime());
+	
 	//$('.card').click(function() {
 	$(document).on('click', '.card:not(.match)', function() {	
+		cardCounter += 1;
+		console.log("counter = " + cardCounter);
+		scoreDisplay(cardCounter);
+		if (cardCounter == 1) {
+			startTime = new Date();
+			console.log("Start Time is: " + startTime);
+		}
 		$( this ).toggleClass('open show'); 
 			flipIt = $( this ).attr('class');
+		//setInterval(interval);	
+	
 		openCards.push(flipIt);
-		console.log(flipIt);
+		//console.log(flipIt);
 		if (openCards.length === 2) {
-			console.log(openCards[0]);
+			//console.log(openCards[0]);
 			cardMatch = compareCards(flipIt, openCards, cardMatch);
 			if (cardMatch == true) {
-				console.log("TRUE");
+				//console.log("TRUE");
 				$(".open.show:not(.match)").addClass("match");
 				openCards.forEach(function(word) {
 					matchedCards.push(word);
 					console.log("Show matches " + matchedCards);
-					if (matchedCards.length === 16) {
-						alert("Good game! You're a winner!");
+					if (matchedCards.length === 4) {
+						const endTime = new Date();
+						console.log("END Time is: " + endTime);
+						const elapsedTime = (endTime - startTime)/ 1000;
+						alert("Good game! You're a winner!"+"Total time = " + elapsedTime);
 					}	
 				});
 			}	else {
-				console.log("FALSE");
+				//console.log("FALSE");
 					setTimeout(function() {
 						$(".open:not(.match)").removeClass("open show");
-					}, 1500);
+					}, 1000);
 			};	
 				//Empty the array for player to try again.
 				openCards.splice(0, 2);
@@ -106,10 +143,10 @@ function showCard() {
 function compareCards(flipIt, openCards, cardMatch, matchedCards) {
 	flipBack = $('.deck').children('class');
 	if (openCards[0] === openCards[1]) {
-		console.log('Got a match');
+		//console.log('Got a match');
 		cardMatch = true;
 	} else {
-		console.log('No match');
+		//console.log('No match');
 		cardMatch = false;
 		};
 	return cardMatch;
