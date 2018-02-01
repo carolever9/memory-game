@@ -81,12 +81,20 @@ let startTime = new Date();
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
-function scoreDisplay(counter) {
-	console.log("In function counter: " + counter);
-	$('.moves').replaceWith('<span class="moves">' + counter + '</span>');
-	if (counter == 7) {
-		$('.stars').remove();
-	}	
+function scoreDisplay(cardCounter) {
+	const lastStar = $('.stars');
+	//console.log("In function counter: " + counter);
+	$('.moves').replaceWith('<span class="moves">' + cardCounter + '</span>');
+	if (cardCounter == 1) {
+			startTime = new Date();
+			console.log("Start Time is: " + startTime);
+	}
+	if (cardCounter == 7) {
+		lastStar.children(':nth-last-child(1)').remove(); //remove first of three stars		
+	}
+	if (cardCounter == 9) {
+		lastStar.children(':nth-last-child(1)').remove(); //remove second of three stars		
+	}
 };		 
  
 function showCard() {
@@ -95,17 +103,11 @@ function showCard() {
 	let cardMatch = false;
 	let matchedCards = [];
 	let cardCounter = 0
-	//timestamp = new Date(timestamp.getTime());
 	
-	//$('.card').click(function() {
 	$(document).on('click', '.card:not(.match)', function() {	
 		cardCounter += 1;
-		console.log("counter = " + cardCounter);
+		//console.log("counter = " + cardCounter);
 		scoreDisplay(cardCounter);
-		if (cardCounter == 1) {
-			startTime = new Date();
-			console.log("Start Time is: " + startTime);
-		}
 		$( this ).toggleClass('open show'); 
 			flipIt = $( this ).attr('class');
 		//setInterval(interval);	
@@ -124,8 +126,13 @@ function showCard() {
 					if (matchedCards.length === 4) {
 						const endTime = new Date();
 						console.log("END Time is: " + endTime);
-						const elapsedTime = (endTime - startTime)/ 1000;
-						alert("Good game! You're a winner!"+"Total time = " + elapsedTime);
+						let elapsedTime = (endTime - startTime)/ 1000;
+						//let xminutes = elapsedTime / 60;
+						//let xseconds %= elapsedTime / 60;  //not working
+						xminutes = Math.floor(elapsedTime / 60);
+						elapsedTime %= 60;
+						xseconds = Math.floor(elapsedTime);
+						alert("Good game! You're a winner! "+"Total time = " + xminutes + ":" + xseconds);
 					}	
 				});
 			}	else {
