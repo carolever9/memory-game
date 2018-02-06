@@ -8,6 +8,8 @@ const cardArray = [
 	'anchor', 'bolt', 'bomb', 'cube', 'bicycle', 'leaf'
 ];
 const deckClass = $('.deck');
+let xmin = 0;
+let xsec = 0;
 
 /*
  * Display the cards on the page
@@ -81,19 +83,33 @@ let startTime = new Date();
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
+setInterval(function() {   /// rundownTimer() {
+	var xmin = 60;
+	let xsec = 00;
+	//for (let xmin = 10; xmin > 0; xmin = xmin - 1) {
+		console.log("Count down is " + xmin);
+		xmin = xmin - 1;
+	//$('.timer').replaceWith(xmin + " : " + xsec);
+		//	xsec--;
+	}, 1000);
+//}
+ 
 function scoreDisplay(cardCounter) {
 	const lastStar = $('.stars');
+	//rundownTimer();
 	//console.log("In function counter: " + counter);
 	$('.moves').replaceWith('<span class="moves">' + cardCounter + '</span>');
 	if (cardCounter == 1) {
 			startTime = new Date();
-			console.log("Start Time is: " + startTime);
-	}
+			setInterval();
+    }
+		
 	if (cardCounter == 7) {
 		lastStar.children(':nth-last-child(1)').remove(); //remove first of three stars		
 	}
 	if (cardCounter == 9) {
 		lastStar.children(':nth-last-child(1)').remove(); //remove second of three stars		
+		clearInterval(myTimer);
 	}
 };		 
  
@@ -127,8 +143,6 @@ function showCard() {
 						const endTime = new Date();
 						console.log("END Time is: " + endTime);
 						let elapsedTime = (endTime - startTime)/ 1000;
-						//let xminutes = elapsedTime / 60;
-						//let xseconds %= elapsedTime / 60;  //not working
 						xminutes = Math.floor(elapsedTime / 60);
 						elapsedTime %= 60;
 						xseconds = Math.floor(elapsedTime);
