@@ -8,10 +8,20 @@ const cardArray = [
 	'anchor', 'bolt', 'bomb', 'cube', 'bicycle', 'leaf'
 ];
 const deckClass = $('.deck');
-let xmin = 0;
+let xmin = 6;
 let xsec = 0;
+let startTime = new Date();
+let text = document.getElementById('timer');
 
-/*
+/*app.js:93 Uncaught TypeError: Cannot set property 'innerText' of null
+    at rundownTimer (app.js:93)
+rundownTimer @ app.js:93
+setInterval (async)
+scoreDisplay @ app.js:108
+(anonymous) @ app.js:130
+dispatch @ jquery.min.js:3
+q.handle @ jquery.min.js:3
+app.js:91 Count down is 6
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
  *   - loop through each card and create its HTML
@@ -70,8 +80,7 @@ setInterval(function () {
 */
 	//console.log("Time is: " + timestamp + timestamp.input.seconds);
 
-//Add 2nd timer
-let startTime = new Date();
+
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -83,16 +92,15 @@ let startTime = new Date();
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
-setInterval(function() {   /// rundownTimer() {
-	var xmin = 60;
-	let xsec = 00;
-	//for (let xmin = 10; xmin > 0; xmin = xmin - 1) {
+function rundownTimer() {
 		console.log("Count down is " + xmin);
 		xmin = xmin - 1;
-	//$('.timer').replaceWith(xmin + " : " + xsec);
-		//	xsec--;
-	}, 1000);
-//}
+		text.innerText = xmin + " min";
+		//text.innerHTML = xmin + " min";
+		if (xmin == 1) {
+			clearInterval(timer);
+		}
+}
  
 function scoreDisplay(cardCounter) {
 	const lastStar = $('.stars');
@@ -101,7 +109,7 @@ function scoreDisplay(cardCounter) {
 	$('.moves').replaceWith('<span class="moves">' + cardCounter + '</span>');
 	if (cardCounter == 1) {
 			startTime = new Date();
-			setInterval();
+			let timer = setInterval(rundownTimer, 1000);
     }
 		
 	if (cardCounter == 7) {
