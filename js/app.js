@@ -11,17 +11,11 @@ const deckClass = $('.deck');
 let xmin = 6;
 let xsec = 0;
 let startTime = new Date();
+let timer = 0;
 let text = document.getElementById('timer');
 
-/*app.js:93 Uncaught TypeError: Cannot set property 'innerText' of null
-    at rundownTimer (app.js:93)
-rundownTimer @ app.js:93
-setInterval (async)
-scoreDisplay @ app.js:108
-(anonymous) @ app.js:130
-dispatch @ jquery.min.js:3
-q.handle @ jquery.min.js:3
-app.js:91 Count down is 6
+
+/*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
  *   - loop through each card and create its HTML
@@ -66,21 +60,6 @@ function loadBoard(cardArray) {
 	})
 }
 
-//Add a timer function
-/*
-const input = {hours: 0, minutes: 0, seconds: 0};
-let timestamp = new Date(input.hours, input.minutes, input.seconds);
-var interval = 1;
-
-setInterval(function () {
-    timestamp = new Date(timestamp.getTime() + interval * 1000);     
-    $('.countdown2').text(timestamp.getHours()+'h:'+
-       timestamp.getMinutes()+'m:'+timestamp.getSeconds()+'s');
-}, Math.abs(interval) * 1000);
-*/
-	//console.log("Time is: " + timestamp + timestamp.input.seconds);
-
-
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -92,11 +71,15 @@ setInterval(function () {
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
+ 
+//Add a timer function. Many thanks to my mentor Kalindi for pointing out:
+//https://stackoverflow.com/questions/37187504/javascript-second-counter/37187818 (1st solution)
+//https://www.w3schools.com/jsref/met_win_clearinterval.asp (without any of the date part)
+
 function rundownTimer() {
 		console.log("Count down is " + xmin);
 		xmin = xmin - 1;
 		text.innerText = xmin + " min";
-		//text.innerHTML = xmin + " min";
 		if (xmin == 1) {
 			clearInterval(timer);
 		}
@@ -109,7 +92,8 @@ function scoreDisplay(cardCounter) {
 	$('.moves').replaceWith('<span class="moves">' + cardCounter + '</span>');
 	if (cardCounter == 1) {
 			startTime = new Date();
-			let timer = setInterval(rundownTimer, 1000);
+			timer = setInterval(function(){rundownTimer() }, 1000);
+			//let timer = setInterval(rundownTimer, 1000);
     }
 		
 	if (cardCounter == 7) {
@@ -117,7 +101,7 @@ function scoreDisplay(cardCounter) {
 	}
 	if (cardCounter == 9) {
 		lastStar.children(':nth-last-child(1)').remove(); //remove second of three stars		
-		clearInterval(myTimer);
+		clearInterval(timer);
 	}
 };		 
  
@@ -133,8 +117,7 @@ function showCard() {
 		//console.log("counter = " + cardCounter);
 		scoreDisplay(cardCounter);
 		$( this ).toggleClass('open show'); 
-			flipIt = $( this ).attr('class');
-		//setInterval(interval);	
+			flipIt = $( this ).attr('class');	
 	
 		openCards.push(flipIt);
 		//console.log(flipIt);
