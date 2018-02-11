@@ -8,12 +8,21 @@ const cardArray = [
 	'anchor', 'bolt', 'bomb', 'cube', 'bicycle', 'leaf'
 ];
 const deckClass = $('.deck');
-let xmin = 6;
-let xsec = 0;
+let xmin = 2;
+let xsec = 59;
 let startTime = new Date();
 let timer = 0;
 let text = document.getElementById('timer');
 
+//Reload the game if button selected. Thanks w3schools.com and stackoverflow.com
+// https://www.w3schools.com/jquery/tryit.asp?filename=tryjquery_event_on
+// https://stackoverflow.com/questions/3715047/how-to-reload-a-page-using-javascript
+$(document).ready(function(){
+    $("button").on("click", function() {
+	console.log("The button was clicked.");
+	window.location.reload(true);
+    });
+});
 
 /*
  * Display the cards on the page
@@ -78,10 +87,15 @@ function loadBoard(cardArray) {
 
 function rundownTimer() {
 		console.log("Count down is " + xmin);
-		xmin = xmin - 1;
-		text.innerText = xmin + " min";
-		if (xmin == 1) {
+		xsec = xsec - 1;
+		if (xsec == 0){
+			xsec = 59;
+			xmin = xmin - 1;
+		}	
+		text.innerText = xmin + ":" + xsec;
+		if (xmin == -1) {
 			clearInterval(timer);
+			text.innerText = "00:00";
 		}
 }
  
@@ -103,8 +117,16 @@ function scoreDisplay(cardCounter) {
 		lastStar.children(':nth-last-child(1)').remove(); //remove second of three stars		
 		clearInterval(timer);
 	}
-};		 
- 
+};
+/*
+function startOver() {
+	$(document).on('click', 'button', function() {
+		alert("I see you clicked");
+	})
+};
+*/
+
+
 function showCard() {
 	const openCards = [];
 	let flipIt = 'test';
