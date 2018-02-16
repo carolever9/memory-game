@@ -8,6 +8,7 @@ const cardArray = [
 	'anchor', 'bolt', 'bomb', 'cube', 'bicycle', 'leaf'
 ];
 const deckClass = $('.deck');
+let myStars = 3;
 let xmin = 2;
 let xsec = 59;
 let startTime = new Date();
@@ -102,7 +103,7 @@ function rundownTimer() {
 function scoreDisplay(cardCounter) {
 	const lastStar = $('.stars');
 	//rundownTimer();
-	//console.log("In function counter: " + counter);
+	console.log("myStars counter: " + myStars);
 	$('.moves').replaceWith('<span class="moves">' + cardCounter + '</span>');
 	if (cardCounter == 1) {
 			startTime = new Date();
@@ -111,20 +112,16 @@ function scoreDisplay(cardCounter) {
     }
 		
 	if (cardCounter == 7) {
+		myStars = myStars - 1;
+		
 		lastStar.children(':nth-last-child(1)').remove(); //remove first of three stars		
 	}
 	if (cardCounter == 9) {
+		myStars = myStars - 1;
 		lastStar.children(':nth-last-child(1)').remove(); //remove second of three stars		
 		clearInterval(timer);
 	}
 };
-/*
-function startOver() {
-	$(document).on('click', 'button', function() {
-		alert("I see you clicked");
-	})
-};
-*/
 
 
 function showCard() {
@@ -159,7 +156,8 @@ function showCard() {
 						xminutes = Math.floor(elapsedTime / 60);
 						elapsedTime %= 60;
 						xseconds = Math.floor(elapsedTime);
-						alert("Good game! You're a winner! "+"Total time = " + xminutes + ":" + xseconds);
+						gameWinner(xminutes, xseconds);
+						//alert("Good game! You're a winner! "+"Total time = " + xminutes + ":" + xseconds);
 					}	
 				});
 			}	else {
@@ -193,6 +191,60 @@ function startGame(){
 	console.log("Shuffled items: " + cardArray);
 	showCard();
 };
+
+
+function gameWinner(myStars, xminutes, xseconds) {
+	divModal = $(".modal-content").children('p');
+	console.log("Stars handed to modal " + myStars);
+	newStats = ("<p>Total Stars = </p>" + myStars);
+	//newStats = $("<p>Total Stars = " + myStars + " Total Time = " + xminutes + ":" + xseconds"</p>");
+	console.log(newStats);
+	divModal.append(newStats);
+	//winnerPage = $("winner");
+	clearInterval(timer);
+	
+	modal.style.display = "block";
+	/*
+	winnerPage.insertAfter(divContainer);
+	//$(document).on('click', 'button', function() {
+		alert("Show winner page.");
+		$.winnerBox({
+		iframe:true, 
+		opacity:0.7, 
+		fixed:true, 
+		innerWidth:500, 
+		innerHeight:250, 
+		scrolling:false});
+			return false;
+	*/
+	};
+
+
+// Get the modal
+var modal = document.getElementById('myModal');
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on the button, open the modal 
+btn.onclick = function() {
+    modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+} 
 
 //Wait for html page to load before starting the game.
 window.onload = function() {
