@@ -149,14 +149,16 @@ function showCard() {
 				openCards.forEach(function(word) {
 					matchedCards.push(word);
 					console.log("Show matches " + matchedCards);
-					if (matchedCards.length === 4) {
+					if (matchedCards.length === 2) {
+						clearInterval(timer);
 						const endTime = new Date();
+						//clearInterval(timer);
 						console.log("END Time is: " + endTime);
 						let elapsedTime = (endTime - startTime)/ 1000;
 						xminutes = Math.floor(elapsedTime / 60);
 						elapsedTime %= 60;
 						xseconds = Math.floor(elapsedTime);
-						gameWinner(xminutes, xseconds);
+						gameWinner(myStars, cardCounter, xminutes, xseconds);
 						//alert("Good game! You're a winner! "+"Total time = " + xminutes + ":" + xseconds);
 					}	
 				});
@@ -193,33 +195,20 @@ function startGame(){
 };
 
 
-function gameWinner(myStars, xminutes, xseconds) {
+function gameWinner(myStars, cardCounter, xminutes, xseconds) {
 	divModal = $(".modal-content").children('p');
-	console.log("Stars handed to modal " + myStars);
-	newStats = ("<p>Total Stars = </p>" + myStars);
-	//newStats = $("<p>Total Stars = " + myStars + " Total Time = " + xminutes + ":" + xseconds"</p>");
-	console.log(newStats);
-	divModal.append(newStats);
-	//winnerPage = $("winner");
-	clearInterval(timer);
-	
+	console.log("Minutes handed = " + xminutes + " Seconds handed = " + xseconds);
+	//newStats = ("<p>Total Stars = </p>" + myStars);
+	newStats = $("<br><span>Accomplished in </span>" + cardCounter + "<span> moves, giving </span>" + myStars + "<span> star(s).</span>");
+	timeStats = $("<br><span>All done in </span>" + xminutes + "<span> minutes and </span>" + xseconds + "<span> seconds.</span>");
+	//divModal.append(newStats, timeStats);
+	playAgain = $("<br><span>Would you like to play again? </span><button id="myBtn">YES!</button>"); 
+	divModal.append(newStats, timeStats, playAgain);
 	modal.style.display = "block";
-	/*
-	winnerPage.insertAfter(divContainer);
-	//$(document).on('click', 'button', function() {
-		alert("Show winner page.");
-		$.winnerBox({
-		iframe:true, 
-		opacity:0.7, 
-		fixed:true, 
-		innerWidth:500, 
-		innerHeight:250, 
-		scrolling:false});
-			return false;
-	*/
+	
 	};
 
-
+//Thanks for major coding for modal goes to w3schools: https://www.w3schools.com/howto/howto_css_modals.asp
 // Get the modal
 var modal = document.getElementById('myModal');
 
