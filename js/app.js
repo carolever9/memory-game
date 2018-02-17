@@ -18,21 +18,19 @@ let text = document.getElementById('timer');
 //Reload the game if button selected. Thanks w3schools.com and stackoverflow.com
 // https://www.w3schools.com/jquery/tryit.asp?filename=tryjquery_event_on
 // https://stackoverflow.com/questions/3715047/how-to-reload-a-page-using-javascript
+
 $(document).ready(function(){
     $("button").on("click", function() {
-	console.log("The button was clicked.");
+	//console.log("The Refresh button was clicked.");
 	window.location.reload(true);
     });
 });
 
 /*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
+ * Shuffle the list of cards using the provided "shuffle" method below
+ * Shuffle function from http://stackoverflow.com/a/2450976
  */
 
-// Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
 
@@ -46,7 +44,11 @@ function shuffle(array) {
     return array;
 }
 
-function loadBoard(cardArray) {
+/* Display the cards on the page
+ *   - loop through each card and create its HTML
+ *   - add each card's HTML to the page
+/*
+ function loadBoard(cardArray) {
 	//Set board up for the start of a new game.
 	//Change all classes back to .card
 	//TODO: cleanup next 5 lines
@@ -82,7 +84,7 @@ function loadBoard(cardArray) {
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
  
-//Add a timer function. Many thanks to my mentor Kalindi for pointing out:
+//Add a timer function. Many thanks to mentor Kalindi for pointing out:
 //https://stackoverflow.com/questions/37187504/javascript-second-counter/37187818 (1st solution)
 //https://www.w3schools.com/jsref/met_win_clearinterval.asp (without any of the date part)
 
@@ -103,11 +105,10 @@ function rundownTimer() {
 function scoreDisplay(cardCounter) {
 	const lastStar = $('.stars');
 	//rundownTimer();
-	console.log("myStars counter: " + myStars);
 	$('.moves').replaceWith('<span class="moves">' + cardCounter + '</span>');
 	if (cardCounter == 1) {
 			startTime = new Date();
-			timer = setInterval(function(){rundownTimer() }, 1000);
+			timer = setInterval(function(){rundownTimer() }, 1020);
 			//let timer = setInterval(rundownTimer, 1000);
     }
 		
@@ -164,6 +165,7 @@ function showCard() {
 				});
 			}	else {
 				//console.log("FALSE");
+				//Many thanks to mentor Luiz Felipe F
 					setTimeout(function() {
 						$(".open:not(.match)").removeClass("open show");
 					}, 1000);
@@ -199,13 +201,20 @@ function gameWinner(myStars, cardCounter, xminutes, xseconds) {
 	divModal = $(".modal-content").children('p');
 	console.log("Minutes handed = " + xminutes + " Seconds handed = " + xseconds);
 	//newStats = ("<p>Total Stars = </p>" + myStars);
-	newStats = $("<br><span>Accomplished in </span>" + cardCounter + "<span> moves, giving </span>" + myStars + "<span> star(s).</span>");
+	newStats = $("<br><span>Accomplished in </span>" + cardCounter + "<span> moves, earning </span>" + myStars + "<span> star(s).</span>");
 	timeStats = $("<br><span>All done in </span>" + xminutes + "<span> minutes and </span>" + xseconds + "<span> seconds.</span>");
 	//divModal.append(newStats, timeStats);
-	playAgain = $("<br><span>Would you like to play again? </span><button id="myBtn">YES!</button>"); 
+	playAgain = $('<br><span>Would you like to play again? </span><button id="myBtn">YES!</button>'); 
 	divModal.append(newStats, timeStats, playAgain);
 	modal.style.display = "block";
-	
+	// When the user clicks on the button, restart the game
+	// Get the button that opens the modal
+	const btn = document.getElementById("myBtn"); 
+	btn.onclick = function() {
+		console.log("button pusher!!");
+		window.location.reload(true);
+	//modal.style.display = "block";
+	}
 	};
 
 //Thanks for major coding for modal goes to w3schools: https://www.w3schools.com/howto/howto_css_modals.asp
@@ -213,15 +222,16 @@ function gameWinner(myStars, cardCounter, xminutes, xseconds) {
 var modal = document.getElementById('myModal');
 
 // Get the button that opens the modal
-var btn = document.getElementById("myBtn");
+//var btn = document.getElementById("myBtn");
 
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
 
-// When the user clicks on the button, open the modal 
-btn.onclick = function() {
-    modal.style.display = "block";
-}
+// When the user clicks on the button, restart the game 
+//btn.onclick = function() {
+//    console.log("button pusher!!");
+	//modal.style.display = "block";
+//}
 
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {
@@ -239,4 +249,3 @@ window.onclick = function(event) {
 window.onload = function() {
 	startGame();
 };
-//alert("Hello - see me");
