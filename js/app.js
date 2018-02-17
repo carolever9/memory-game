@@ -1,12 +1,26 @@
 /*
- * Create a list that holds all of your cards
+ * Memory Game - edition by C.Everett
  * Build card array holding the names of 16 cards.
  */
 const cardArray = [
-	'anchor', 'bolt', 'cube', 'diamond', 'paper-plane-o',
-	'leaf', 'bicycle', 'bomb', 'diamond', 'paper-plane-o',
-	'anchor', 'bolt', 'bomb', 'cube', 'bicycle', 'leaf'
+    'anchor',
+    'bolt',
+    'cube',
+    'diamond',
+    'paper-plane-o',
+    'leaf',
+    'bicycle',
+    'bomb',
+    'diamond',
+    'paper-plane-o',
+    'anchor',
+    'bolt',
+    'bomb',
+    'cube',
+    'bicycle',
+    'leaf'
 ];
+/* Create global variables */
 const deckClass = $('.deck');
 let myStars = 3;
 let xmin = 2;
@@ -15,19 +29,18 @@ let startTime = new Date();
 let timer = 0;
 let text = document.getElementById('timer');
 
-//Reload the game if button selected. Thanks w3schools.com and stackoverflow.com
-// https://www.w3schools.com/jquery/tryit.asp?filename=tryjquery_event_on
-// https://stackoverflow.com/questions/3715047/how-to-reload-a-page-using-javascript
-
+/*Reload the game if Refresh button selected. Thanks w3schools.com and stackoverflow.com
+ * https://www.w3schools.com/jquery/tryit.asp?filename=tryjquery_event_on
+ * https://stackoverflow.com/questions/3715047/how-to-reload-a-page-using-javascript
+ */
 $(document).ready(function(){
     $("button").on("click", function() {
-	//console.log("The Refresh button was clicked.");
-	window.location.reload(true);
+    //console.log("The Refresh button was clicked.");
+    window.location.reload(true);
     });
 });
 
-/*
- * Shuffle the list of cards using the provided "shuffle" method below
+/* Shuffle the list of cards using the provided "shuffle" method below
  * Shuffle function from http://stackoverflow.com/a/2450976
  */
 
@@ -44,32 +57,24 @@ function shuffle(array) {
     return array;
 }
 
-/* Display the cards on the page
+/* Set game board up for the start of a new game, display cards on the page
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
-/*
+ */
  function loadBoard(cardArray) {
-	//Set board up for the start of a new game.
-	//Change all classes back to .card
-	//TODO: cleanup next 5 lines
-	//var deckClass = $('.deck');
-	var listTag1 = $('li');
-	//var listTag = $(this).find('li');
-	var iTag = $('i');
-	var classMatch = $('.card.match');
-	const classCard = $('.card');
+    //Change all classes back to .card
+    const classCard = $('.card');
 
-	//Empty removes any previous card symbols
-	$(".card").empty();
-	$('li').removeClass('card match').addClass('card');
-	$('li').removeClass('card open show').addClass('card');
+    //Empty removes any previous card symbols
+    $(".card").empty();
+    $('li').removeClass('card match').addClass('card');
+    $('li').removeClass('card open show').addClass('card');
 
-	//For each card class add a child class using the shuffled card array
-	classCard.each(function(index) {
-		$( this ).addClass('fa fa-' + cardArray[index]);
-		index++;
-	//console.log("The board is set");
-	})
+    //For each card class add a child class using the shuffled card array
+    classCard.each(function(index) {
+        $( this ).addClass('fa fa-' + cardArray[index]);
+        index++;
+    })
 }
 
 
@@ -84,44 +89,46 @@ function shuffle(array) {
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
  
-//Add a timer function. Many thanks to mentor Kalindi for pointing out:
-//https://stackoverflow.com/questions/37187504/javascript-second-counter/37187818 (1st solution)
-//https://www.w3schools.com/jsref/met_win_clearinterval.asp (without any of the date part)
-
+/* Add a timer function. Many thanks to mentor Kalindi for pointing out:
+ * https://stackoverflow.com/questions/37187504/javascript-second-counter/37187818 (1st solution)
+ * https://www.w3schools.com/jsref/met_win_clearinterval.asp (without any of the date part)
+ */
 function rundownTimer() {
-		console.log("Count down is " + xmin);
-		xsec = xsec - 1;
-		if (xsec == 0){
-			xsec = 59;
-			xmin = xmin - 1;
-		}	
-		text.innerText = xmin + ":" + xsec;
-		if (xmin == -1) {
-			clearInterval(timer);
-			text.innerText = "00:00";
-		}
-}
- 
-function scoreDisplay(cardCounter) {
-	const lastStar = $('.stars');
-	//rundownTimer();
-	$('.moves').replaceWith('<span class="moves">' + cardCounter + '</span>');
-	if (cardCounter == 1) {
-			startTime = new Date();
-			timer = setInterval(function(){rundownTimer() }, 1020);
-			//let timer = setInterval(rundownTimer, 1000);
+//console.log("Count down is " + xmin);
+    xsec = xsec - 1;
+    //Reset the seconds with each new minute
+    if (xsec == 0){
+        xsec = 59;
+        xmin = xmin - 1;
     }
-		
-	if (cardCounter == 7) {
-		myStars = myStars - 1;
-		
-		lastStar.children(':nth-last-child(1)').remove(); //remove first of three stars		
-	}
-	if (cardCounter == 9) {
-		myStars = myStars - 1;
-		lastStar.children(':nth-last-child(1)').remove(); //remove second of three stars		
-		clearInterval(timer);
-	}
+    text.innerText = xmin + ":" + xsec;
+    if (xmin == -1) {
+        clearInterval(timer);
+        text.innerText = "00:00";
+    }
+}
+
+
+function scoreDisplay(cardCounter) {
+    const lastStar = $('.stars');
+    //Display number of moves each time a card is clicked
+    $('.moves').replaceWith('<span class="moves">' + cardCounter + '</span>');
+    //Start the timer once first card is clicked
+    if (cardCounter == 1) {
+        startTime = new Date();
+        //Uses milliseconds for each second, padded to track closer to calculated finish time
+        timer = setInterval(function(){rundownTimer() }, 1020);
+    }
+
+    if (cardCounter == 21) {
+        myStars = myStars - 1;
+        lastStar.children(':nth-last-child(1)').remove(); //remove first of three stars
+    }
+    if (cardCounter == 35) {
+        myStars = myStars - 1;
+        lastStar.children(':nth-last-child(1)').remove(); //remove second of three stars
+        clearInterval(timer);
+    }
 };
 
 
@@ -132,7 +139,7 @@ function showCard() {
 	let matchedCards = [];
 	let cardCounter = 0
 	
-	$(document).on('click', '.card:not(.match)', function() {	
+	$(document).on('click', '.card:not(.match)', function() {
 		cardCounter += 1;
 		//console.log("counter = " + cardCounter);
 		scoreDisplay(cardCounter);
@@ -150,7 +157,7 @@ function showCard() {
 				openCards.forEach(function(word) {
 					matchedCards.push(word);
 					console.log("Show matches " + matchedCards);
-					if (matchedCards.length === 2) {
+					if (matchedCards.length === 16) {
 						clearInterval(timer);
 						const endTime = new Date();
 						//clearInterval(timer);
@@ -170,7 +177,7 @@ function showCard() {
 						$(".open:not(.match)").removeClass("open show");
 					}, 1000);
 			};	
-				//Empty the array for player to try again.
+				//Empty the array for player to try another match.
 				openCards.splice(0, 2);
 		};
   });	
@@ -198,11 +205,11 @@ function startGame(){
 
 
 function gameWinner(myStars, cardCounter, xminutes, xseconds) {
-	divModal = $(".modal-content").children('p');
+	divModal = $(".modal-content").children('h1');
 	console.log("Minutes handed = " + xminutes + " Seconds handed = " + xseconds);
 	//newStats = ("<p>Total Stars = </p>" + myStars);
 	newStats = $("<br><span>Accomplished in </span>" + cardCounter + "<span> moves, earning </span>" + myStars + "<span> star(s).</span>");
-	timeStats = $("<br><span>All done in </span>" + xminutes + "<span> minutes and </span>" + xseconds + "<span> seconds.</span>");
+	timeStats = $("<br><span>Your time was: </span>" + xminutes + "<span> minutes and </span>" + xseconds + "<span> seconds.</span>");
 	//divModal.append(newStats, timeStats);
 	playAgain = $('<br><span>Would you like to play again? </span><button id="myBtn">YES!</button>'); 
 	divModal.append(newStats, timeStats, playAgain);
