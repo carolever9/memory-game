@@ -175,31 +175,48 @@ function scoreDisplay(cardCounter) {
  * startTime - time stamp from first card clicked
  * endTime - time stamp from last card once all match
  * elapsedTime - subtract startTime from endTime for total seconds then calculate time into minutes and seconds
+ * active - To slow clicking
+ *     Thanks https://stackoverflow.com/questions/32342175/jquery-for-simple-horizontal-slider/32343478#32343478
  */
 
 function showCard() {
     const openCards = [];
+    let active = false;
     let flipIt = 'test';
     let cardMatch = false;
     let matchedCards = [];
     let cardCounter = 0;
 
     /**Always check that class .match is not part of the cards class, then display it*/
-    $(document).on('click', '.card:not(.match)', function() {
-        cardCounter += 1;
-        scoreDisplay(cardCounter);
-        $( this ).toggleClass('open show');
+    if (active === false) {
+        $(document).on('click', '.card:not(.match)', function() {
+            active = true;
+            $( this ).delay(4000).toggleClass('open show');
             flipIt = $( this ).attr('class');
+            openCards.push(flipIt);
+            cardCounter += 1;
+            scoreDisplay(cardCounter);
+            console.log(openCards);
 
-        openCards.push(flipIt);
         /**When there are 2 cards check if they match*/
-        if (openCards.length === 2) {
+        if (openCards.length >= 3) {
+			openCards[2].removeClass("open show");
+		}   else if (openCards.length === 2) {
             cardMatch = compareCards(openCards, cardMatch);
-            if (cardMatch == true) {
+
+            if (cardMatch == false) {
+				/**Cards don't match, after 500 milliseconds hide card face, return it to selectable cards
+                 * Many thanks to mentor Luiz Felipe F
+                 */
+                    setTimeout(function() {
+                    $(".open:not(.match)").removeClass("open show");
+                    }, 500);
+            }   else if (cardMatch == true) {
                 /**When cards match change class so they can't be clicked again*/
                 $(".open.show:not(.match)").addClass("match");
                 openCards.forEach(function(word) {
                     matchedCards.push(word);
+
                     /** When all 16 cards are matched stop the timer, calculate time it took, and send info to gameWinner()*/
                     if (matchedCards.length === 16) {
                         clearInterval(timer);
@@ -211,18 +228,12 @@ function showCard() {
                         gameWinner(myStars, cardCounter, xminutes, xseconds);
                     }
                 });
-            }   else {
-                /**Cards don't match, after 1000 milliseconds hide card face, return it to selectable cards
-                 * Many thanks to mentor Luiz Felipe F
-                 */
-                    setTimeout(function() {
-                    $(".open:not(.match)").removeClass("open show");
-                    }, 1000);
             };
-                /**Empty the array for player to try to match two more cards*/
-                openCards.splice(0, 2);
-        };
-    });
+            /**Empty the array for player to try to match two more cards*/
+            openCards.splice(0, 2);
+            active = false;
+        }
+    })};
 }
 
 
