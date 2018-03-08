@@ -176,8 +176,9 @@ function scoreDisplay(cardCounter) {
  * startTime - time stamp from first card clicked
  * endTime - time stamp from last card once all match
  * elapsedTime - subtract startTime from endTime for total seconds then calculate time into minutes and seconds
- * active - To slow clicking
+ * active - To slow down clicking to fast that overrides the games ability
  *     Thanks https://stackoverflow.com/questions/32342175/jquery-for-simple-horizontal-slider/32343478#32343478
+ *     Many many thanks to James Tench for suggests to get it working in this application
  */
 
 function showCard() {
@@ -190,53 +191,36 @@ function showCard() {
 
     /**Always check that class .match is not part of the cards class, then display it*/
     if (active === false) {
-        console.log("active1 = " + active);
-		$(document).on('click', '.card:not(.match)', function() {
-            console.log("active2 = " + active);
-			if (active == true) {
-				return;
-			}
-			active = true;
-			console.log("active3 = " + active);
-			cardCounter += 1;
-            scoreDisplay(cardCounter);
+        $(document).on('click', '.card:not(.match)', function() {
+            if (active == true) {
+                return;
+            }
+            active = true;
+
             $( this ).toggleClass('open show');
             flipIt = $( this ).attr('class');
-            //openCards.push(flipIt);
-            //cardCounter += 1;
-            //scoreDisplay(cardCounter);
-			if (openCards.length == 3) {
-				$( this ).removeClass("open show");
-				openCards.length == 2;
-			}   else if (openCards.length == 2) {
-					cardMatch, active = compareCards(flipIt, openCards, cardMatch, active);
-					console.log("active5 = " + active + " match? " + cardMatch + " openCards = " + openCards + openCards.length);
-			}	else if (openCards.length == 1) {
-					active = false;
-			}
-					
+            cardCounter += 1;
+            scoreDisplay(cardCounter);
+            cardMatch = compareCards(flipIt, openCards, cardMatch);
+
         /**When there are 3 cards remove last*/
-        /*if (openCards.length >= 3) {
-			flipIt.removeClass("open show");
-		}   else if (openCards.length === 2) {
-            //cardMatch = compareCards(openCards, cardMatch);
-			console.log("active4 = " + active);*/
+        if (openCards.length >= 3) {
+            openCards[2].removeClass("open show");
+        }   else if (openCards.length === 2) {
+
             if (cardMatch == false) {
-				/**Cards don't match, after 500 milliseconds hide card face, return it to selectable cards
+                /**Cards don't match, after 500 milliseconds hide card face, return it to selectable cards
                  * Many thanks to mentor Luiz Felipe F
                  */
                     setTimeout(function() {
-						$(".open:not(.match)").removeClass("open show");
+                    $(".open:not(.match)").removeClass("open show");
                     }, 500);
             }   else if (cardMatch == true) {
-				//if (cardMatch == true) {
                 /**When cards match change class so they can't be clicked again*/
                 $(".open.show:not(.match)").addClass("match");
                 openCards.forEach(function(word) {
                     matchedCards.push(word);
-					/**Empty the array for player to try to match two more cards*/
-					openCards.splice(0, 2);
-				})
+
                     /** When all 16 cards are matched stop the timer, calculate time it took, and send info to gameWinner()*/
                     if (matchedCards.length === 16) {
                         clearInterval(timer);
@@ -247,17 +231,14 @@ function showCard() {
                         xseconds = Math.floor(elapsedTime);
                         gameWinner(myStars, cardCounter, xminutes, xseconds);
                     }
-                };
-            //};
+                });
+            };
             /**Empty the array for player to try to match two more cards*/
-            //openCards.splice(0, 2);
-        })
-		if (active == true) {
-				return;
-			}
-			active = false;
-    };
-};
+            openCards.splice(0, 2);
+        }
+        active = false;
+    });
+}};
 
 
 /**
@@ -267,63 +248,35 @@ function showCard() {
  * @returns {boolean} cardMatch
  */
 
-function compareCards(flipIt, openCards, cardMatch, active) {
-	console.log("flipIt: " +  flipIt);
+function compareCards(flipIt, openCards, cardMatch) {
+    console.log(flipIt);
     let newArray = flipIt.split(' ');
-			
-	console.log("new1&3: " + newArray[1], newArray[3]);
     let idValue = newArray[1];
     let nameValue = newArray[3];
-	
-    openCards.push({idValue, nameValue});
-	console.log('idValue = ' + idValue +  ' nameValue = ' + nameValue);
-        //console.log(openCards[0], openCards[2]);
+    openCards.push({idValue, nameValue });
         if (openCards.length === 2) {
             let symbol1 = openCards[0].idValue;
             let symbol2 = openCards[1].idValue;
             let name1 = openCards[0].nameValue;
             let name2 = openCards[1].nameValue;
-				console.log("symbol1 = " + symbol1 + " symbol2 = " + symbol2);
-				
+            console.log("symbol1 = " + symbol1 + " symbol2 = " + symbol2);
+
             if (symbol1 == symbol2) {
                 /** Symbols should not match, if they do then same card was clicked twice*/
                 cardMatch = false;
-				console.log(cardMatch);
-					
+                console.log(cardMatch);
             }   else if (symbol1 != symbol2) {
                 /** Then check card name for match*/
-                if ((name1 == name2) && (symbol1 != symbol2)) {
-                    
-					cardMatch = true;
-						//console.log("names s/b T = " + cardMatch);
-					active = false;
-					}	//else {
-						//cardMatch = false;
-					//}
-					console.log("names s/b T = " + cardMatch);
-            }   else {
+                if (name1 == name2) {
+                    cardMatch = true;
+                    console.log("names s/b T = " + cardMatch);
+                }   else {
                     cardMatch = false;
-							console.log("names s/b F = " + cardMatch);
-							active = false;
+                    console.log("names s/b F = " + cardMatch);
                 }
             }
-		//}	//else {
-			//if (active == true) {
-				//return;
-			//}
-			active = false;
-		//};
-	/*if (openCards[0] === openCards[1]) {
-        //** Cards show a match*/
-    //    cardMatch = true;
-    ///} else {
-    //    /** Cards do not match*/
-    //    cardMatch = false;
-    //};*/
-	
-    console.log("active in compare = " + active);
-	active = false;
-	return cardMatch, active;
+        };
+    return cardMatch;
 };
 
 
