@@ -92,7 +92,6 @@ function loadBoard(cardArray) {
 
     /**For each card class add a child class using the shuffled card array*/
     classCard.each(function(index) {
-        //$( this ).addClass('fa fa-' + cardArray[index]);
         $( this ).addClass(cardArray[index] + index + ' fa fa-' + cardArray[index]);
         index++;
     })
@@ -178,7 +177,7 @@ function scoreDisplay(cardCounter) {
  * elapsedTime - subtract startTime from endTime for total seconds then calculate time into minutes and seconds
  * active - To slow down clicking to fast that overrides the games ability
  *     Thanks https://stackoverflow.com/questions/32342175/jquery-for-simple-horizontal-slider/32343478#32343478
- *     Many many thanks to James Tench for suggests to get it working in this application
+ *     Many thanks to Kieth Doba and James Tench for suggests to manage fast clicking 
  */
 
 function showCard() {
@@ -207,19 +206,23 @@ function showCard() {
         if (openCards.length >= 3) {
             openCards[2].removeClass("open show");
         }   else if (openCards.length === 2) {
-
+            $('.deck').find('.card').addClass('disable-click');
             if (cardMatch == false) {
                 /**Cards don't match, after 500 milliseconds hide card face, return it to selectable cards
-                 * Many thanks to mentor Luiz Felipe F
+                 * Thanks to mentor Luiz Felipe F for setTimeout to show 2nd card
+                 * Many thanks to super star mentor Iara for disabling the clicking
                  */
                     setTimeout(function() {
-                    $(".open:not(.match)").removeClass("open show");
+                        openCards.splice(0, 2);
+                        $(".open:not(.match)").removeClass("open show");
+                        $('.deck').find('.card').removeClass('disable-click');
                     }, 500);
             }   else if (cardMatch == true) {
-                /**When cards match change class so they can't be clicked again*/
-                $(".open.show:not(.match)").addClass("match");
-                openCards.forEach(function(word) {
+                    /**When cards match change class so they can't be clicked again*/
+                    $(".open.show:not(.match)").addClass("match");
+                    openCards.forEach(function(word) {
                     matchedCards.push(word);
+                    $('.deck').find('.card').removeClass('disable-click');
 
                     /** When all 16 cards are matched stop the timer, calculate time it took, and send info to gameWinner()*/
                     if (matchedCards.length === 16) {
