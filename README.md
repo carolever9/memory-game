@@ -2,7 +2,12 @@
 
 
 There are two sets of eight (8) playing cards displayed face down in a square grid. 
-Find the matching pair for each one within the alloted three (3) minute time.
+Find the matching pair for each one to win the game. 
+
+For fun there is a three (3) minute time challenge. Try to find all the pairs 
+before the timer runs down to zero (0).
+If you don't make it you can continue to play for practice and the total time it 
+took will be displayed once all cards are matched
 
 
 
