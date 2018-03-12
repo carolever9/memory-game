@@ -196,7 +196,7 @@ function showCard() {
             }
             active = true;
 
-            $( this ).toggleClass('open show');
+            $( this ).toggleClass('open show disable-click');
             flipIt = $( this ).attr('class');
             cardCounter += 1;
             scoreDisplay(cardCounter);
